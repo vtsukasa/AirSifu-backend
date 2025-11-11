@@ -1,86 +1,70 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
-import json
 import os
 import requests
+from dotenv import load_dotenv
+
+# Load environment variables (for local dev)
+load_dotenv()
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS so your GoDaddy frontend can access this API
+CORS(app)  # ✅ Enable CORS for all routes (can be limited to specific origins if needed)
 
-# --- CONFIGURATION ---
-OPENWEATHER_API_KEY = "34fa89d91d947206c79c465555c4b954"
+# Load your OpenWeather API key from environment
+OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
 
-# Make sure Render finds the right paths
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ROUTE_FILE = os.path.join(BASE_DIR, 'data', 'routes.json')
-AIRPORTS_FILE = os.path.join(BASE_DIR, 'data', 'airports.json')
-
-
-# --- HELPER FUNCTIONS ---
-def load_json(file_path):
-    if os.path.exists(file_path):
-        with open(file_path, 'r') as file:
-            return json.load(file)
-    return {}
+# ---------- ROUTE 1: GET FLIGHT DATA FROM OPENSKY ----------
+@app.route('/api/flights', methods=['GET'])
+def get_flights():
+    import requests
+    try:
+        url = "https://opensky-network.org/api/states/all"
+        response = requests.get(url)
+        return response.json()
+    except Exception as e:
+        return {"error": str(e)}, 500
 
 
-def get_weather(lat, lon):
-    url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}&units=metric"
-    response = requests.get(url)
+# ---------- ROUTE 2: GET WEATHER DATA FROM OPENWEATHER ----------
+@app.route('/api/weather', methods=['GET'])
+def get_weather():
+    """
+    Fetch weather data for a given city or coordinates.
+    Example frontend call: /api/weather?city=Kuching
+    or /api/weather?lat=1.5&lon=110.3
+    """
+    city = request.args.get('city')
+    lat = request.args.get('lat')
+    lon = request.args.get('lon')
 
-    if response.status_code == 200:
+    if not OPENWEATHER_API_KEY:
+        return jsonify({"error": "Missing OpenWeather API key"}), 500
+
+    try:
+        if city:
+            url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={OPENWEATHER_API_KEY}&units=metric"
+        elif lat and lon:
+            url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}&units=metric"
+        else:
+            return jsonify({"error": "Please provide city or coordinates"}), 400
+
+        response = requests.get(url)
         data = response.json()
-        return {
-            "temperature": data["main"]["temp"],
-            "weather": data["weather"][0]["description"],
-            "wind_speed": data["wind"]["speed"],
-            "humidity": data["main"]["humidity"]
-        }
-    else:
-        return {"error": "Weather data not available"}
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
-# --- ROUTES ---
+# ---------- ROOT ROUTE ----------
 @app.route('/')
 def home():
-    return jsonify({"status": "AirSifu backend is live!"})
-
-
-@app.route('/get_route', methods=['GET'])
-def get_route():
-    departure = request.args.get('departure')
-    destination = request.args.get('destination')
-
-    if not departure or not destination:
-        return jsonify({"error": "Missing departure or destination"}), 400
-
-    airports = load_json(AIRPORTS_FILE)
-    routes = load_json(ROUTE_FILE)
-
-    if departure not in airports or destination not in airports:
-        return jsonify({"error": "Invalid airport code"}), 400
-
-    route_key = f"{departure}-{destination}"
-    if route_key not in routes:
-        return jsonify({"error": "Route not found"}), 404
-
-    dep_coords = airports[departure]
-    dest_coords = airports[destination]
-
-    dep_weather = get_weather(dep_coords["lat"], dep_coords["lon"])
-    dest_weather = get_weather(dest_coords["lat"], dest_coords["lon"])
-
     return jsonify({
-        "departure": {"lat": dep_coords["lat"], "lon": dep_coords["lon"], "name": departure},
-        "destination": {"lat": dest_coords["lat"], "lon": dest_coords["lon"], "name": destination},
-        "departure_weather": dep_weather,
-        "destination_weather": dest_weather,
-        "distance_km": routes[route_key]["distance_km"],
-        "flight_time_hours": routes[route_key]["flight_time_hours"]
+        "message": "AirSifu Backend API is running",
+        "routes": ["/api/flights", "/api/weather"]
     })
 
 
-# --- MAIN ENTRY POINT ---
+# ---------- START SERVER ----------
 if __name__ == '__main__':
-    # Run on all interfaces for Render
-    app.run(host='0.0.0.0', port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
