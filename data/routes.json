@@ -1,0 +1,110 @@
+{
+    "KUL-NRT": {
+        "departure": "KUL",
+        "destination": "NRT",
+        "distance_km": 5330,
+        "flight_time_hours": 6.5
+    },
+    "NRT-LAX": {
+        "departure": "NRT",
+        "destination": "LAX",
+        "distance_km": 8770,
+        "flight_time_hours": 10.5
+    },
+    "LAX-JFK": {
+        "departure": "LAX",
+        "destination": "JFK",
+        "distance_km": 3970,
+        "flight_time_hours": 5.5
+    },
+    "SIN-LHR": {
+        "departure": "SIN",
+        "destination": "LHR",
+        "distance_km": 10890,
+        "flight_time_hours": 13.5
+    },
+    "KUL-LAX": {
+        "departure": "KUL",
+        "destination": "LAX",
+        "distance_km": 14100,
+        "flight_time_hours": 17.5
+    },
+    "KUL-JFK": {
+        "departure": "KUL",
+        "destination": "JFK",
+        "distance_km": 15300,
+        "flight_time_hours": 18.5
+    },
+    "KUL-SIN": {
+        "departure": "KUL",
+        "destination": "SIN",
+        "distance_km": 297,
+        "flight_time_hours": 1.0
+    },
+    "KUL-LHR": {
+        "departure": "KUL",
+        "destination": "LHR",
+        "distance_km": 10500,
+        "flight_time_hours": 13.5
+    },
+    "KUL-DXB": {
+        "departure": "KUL",
+        "destination": "DXB",
+        "distance_km": 5550,
+        "flight_time_hours": 7.0
+    },
+    "KUL-CDG": {
+        "departure": "KUL",
+        "destination": "CDG",
+        "distance_km": 10400,
+        "flight_time_hours": 13.0
+    },
+    "NRT-JFK": {
+        "departure": "NRT",
+        "destination": "JFK",
+        "distance_km": 10850,
+        "flight_time_hours": 13.5
+    },
+    "LHR-JFK": {
+        "departure": "LHR",
+        "destination": "JFK",
+        "distance_km": 5560,
+        "flight_time_hours": 7.5
+    },
+    "DXB-JFK": {
+        "departure": "DXB",
+        "destination": "JFK",
+        "distance_km": 11000,
+        "flight_time_hours": 14.0
+    },
+    "CDG-AMS": {
+        "departure": "CDG",
+        "destination": "AMS",
+        "distance_km": 430,
+        "flight_time_hours": 1.0
+    },
+    "HKG-ICN": {
+        "departure": "HKG",
+        "destination": "ICN",
+        "distance_km": 2060,
+        "flight_time_hours": 3.0
+    },
+    "SYD-HND": {
+        "departure": "SYD",
+        "destination": "HND",
+        "distance_km": 7820,
+        "flight_time_hours": 9.5
+    },
+    "AMS-FRA": {
+        "departure": "AMS",
+        "destination": "FRA",
+        "distance_km": 370,
+        "flight_time_hours": 1.0
+    },
+    "FRA-ORD": {
+        "departure": "FRA",
+        "destination": "ORD",
+        "distance_km": 6990,
+        "flight_time_hours": 9.0
+    }
+}

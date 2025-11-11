@@ -1,0 +1,17 @@
+{
+    "KUL": {"name": "Kuala Lumpur International Airport", "lat": 2.7456, "lon": 101.7099},
+    "NRT": {"name": "Tokyo Narita International Airport", "lat": 35.7720, "lon": 140.3929},
+    "LAX": {"name": "Los Angeles International Airport", "lat": 33.9416, "lon": -118.4085},
+    "JFK": {"name": "John F. Kennedy International Airport", "lat": 40.6413, "lon": -73.7781},
+    "SIN": {"name": "Singapore Changi Airport", "lat": 1.3644, "lon": 103.9915},
+    "LHR": {"name": "London Heathrow Airport", "lat": 51.4700, "lon": -0.4543},
+    "DXB": {"name": "Dubai International Airport", "lat": 25.2532, "lon": 55.3657},
+    "CDG": {"name": "Charles de Gaulle Airport", "lat": 49.0097, "lon": 2.5479},
+    "SYD": {"name": "Sydney Kingsford Smith Airport", "lat": -33.9399, "lon": 151.1753},
+    "HND": {"name": "Tokyo Haneda Airport", "lat": 35.5494, "lon": 139.7798},
+    "HKG": {"name": "Hong Kong International Airport", "lat": 22.3080, "lon": 113.9185},
+    "ICN": {"name": "Incheon International Airport", "lat": 37.4602, "lon": 126.4407},
+    "AMS": {"name": "Amsterdam Schiphol Airport", "lat": 52.3105, "lon": 4.7683},
+    "FRA": {"name": "Frankfurt am Main Airport", "lat": 50.0333, "lon": 8.5706},
+    "ORD": {"name": "O'Hare International Airport", "lat": 41.9742, "lon": -87.9073}
+}
