@@ -4,34 +4,48 @@ import os
 import requests
 from dotenv import load_dotenv
 
-# Load environment variables (for local dev)
+# Load .env variables (local dev)
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)  # ✅ Enable CORS for all routes (can be limited to specific origins if needed)
+CORS(app)  # Enable CORS for all routes
 
-# Load your OpenWeather API key from environment
+# OpenWeather API key from environment
 OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
 
-# ---------- ROUTE 1: GET FLIGHT DATA FROM OPENSKY ----------
+# ------------------ ROUTES ------------------
+
+@app.route('/')
+def home():
+    return jsonify({
+        "status": "AirSifu backend is live!",
+        "routes": [
+            "/api/flights  →  Live aircraft data from OpenSky",
+            "/api/weather?city=Kuching  →  Current weather data from OpenWeather"
+        ]
+    })
+
+
 @app.route('/api/flights', methods=['GET'])
 def get_flights():
-    import requests
+    """
+    Fetch live aircraft states from OpenSky Network.
+    No authentication required.
+    """
     try:
         url = "https://opensky-network.org/api/states/all"
         response = requests.get(url)
-        return response.json()
+        data = response.json()
+        return jsonify(data)
     except Exception as e:
-        return {"error": str(e)}, 500
+        return jsonify({"error": str(e)}), 500
 
 
-# ---------- ROUTE 2: GET WEATHER DATA FROM OPENWEATHER ----------
 @app.route('/api/weather', methods=['GET'])
 def get_weather():
     """
     Fetch weather data for a given city or coordinates.
-    Example frontend call: /api/weather?city=Kuching
-    or /api/weather?lat=1.5&lon=110.3
+    Example call: /api/weather?city=Kuching
     """
     city = request.args.get('city')
     lat = request.args.get('lat')
@@ -46,25 +60,15 @@ def get_weather():
         elif lat and lon:
             url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}&units=metric"
         else:
-            return jsonify({"error": "Please provide city or coordinates"}), 400
+            return jsonify({"error": "Provide city or coordinates"}), 400
 
         response = requests.get(url)
-        data = response.json()
-        return jsonify(data)
+        return jsonify(response.json())
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 
-# ---------- ROOT ROUTE ----------
-@app.route('/')
-def home():
-    return jsonify({
-        "message": "AirSifu Backend API is running",
-        "routes": ["/api/flights", "/api/weather"]
-    })
-
-
-# ---------- START SERVER ----------
+# ------------------ RUN SERVER ------------------
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
